@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title><!-- TITLE: document title --></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #fc6d26;
+    --accent-2: #6e49cb;
+    --ok: #16a34a;
+    --warn: #d97706;
+    --code-bg: #1e1e2e;
+    --code-text: #cdd6f4;
+    --code-key: #f5c2e7;
+    --code-str: #a6e3a1;
+    --code-com: #6c7086;
+    --code-num: #fab387;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+  header.hero {
+    background: linear-gradient(135deg, #1f1f2e 0%, #2d1b4e 100%);
+    color: #fff;
+    padding: 3rem 1.5rem 2.5rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 4px solid var(--accent);
+  }
+  header.hero .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  header.hero .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  header.hero h1 {
+    font-size: 2.4rem;
+    margin: 0 0 0.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  header.hero p.lede {
+    font-size: 1.1rem;
+    margin: 0;
+    color: #cbd5e1;
+    max-width: 60ch;
+  }
+  header.hero .meta {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+  header.hero .meta span strong {
+    color: #e2e8f0;
+    font-weight: 600;
+  }
+  h2 {
+    font-size: 1.55rem;
+    margin: 2.5rem 0 1rem;
+    letter-spacing: -0.01em;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0.4rem;
+  }
+  h2 .num {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.85rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    line-height: 1.6rem;
+    text-align: center;
+    border-radius: 50%;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+    font-weight: 700;
+  }
+  h3 {
+    font-size: 1.1rem;
+    margin: 1.8rem 0 0.6rem;
+  }
+  p { margin: 0 0 0.9rem; }
+  a { color: var(--accent-2); text-decoration: none; border-bottom: 1px dotted var(--accent-2); }
+  a:hover { color: var(--accent); border-color: var(--accent); }
+  code {
+    font-family: "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+    font-size: 0.88em;
+    background: #eef0f3;
+    padding: 0.12em 0.4em;
+    border-radius: 3px;
+    color: #4c1d95;
+  }
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+    font-size: 0.83rem;
+    line-height: 1.55;
+    margin: 0.8rem 0 1.4rem;
+    border: 1px solid #2a2a3e;
+  }
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  .tldr {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 0 0 2.5rem;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card.purple { border-left-color: var(--accent-2); }
+  .card.green { border-left-color: var(--ok); }
+  .card.amber { border-left-color: var(--warn); }
+  .card .label {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+  .card .title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+  }
+  .card .body {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0;
+  }
+  .diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin: 1rem 0 1.8rem;
+    overflow-x: auto;
+  }
+  .diagram-caption {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 0.4rem;
+    font-style: italic;
+  }
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 2rem;
+    background: var(--surface);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  table.compare th, table.compare td {
+    padding: 0.7rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.compare th {
+    background: #f8fafc;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  table.compare tr:last-child td { border-bottom: none; }
+  table.compare td:first-child {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pill {
+    display: inline-block;
+    padding: 0.12em 0.55em;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .pill.ok { background: #dcfce7; color: #166534; }
+  .pill.warn { background: #fef3c7; color: #92400e; }
+  .pill.info { background: #e0e7ff; color: #3730a3; }
+  .pill.muted { background: #f3f4f6; color: #4b5563; }
+  .callout {
+    background: #fff7ed;
+    border-left: 4px solid var(--accent);
+    padding: 0.9rem 1.1rem;
+    margin: 1rem 0 1.4rem;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+  }
+  .callout.info { background: #eef2ff; border-left-color: var(--accent-2); }
+  .callout.ok { background: #f0fdf4; border-left-color: var(--ok); }
+  .callout.warn { background: #fefce8; border-left-color: var(--warn); }
+  .callout strong { display: block; margin-bottom: 0.2rem; }
+  ul, ol { margin: 0.5rem 0 1.1rem; padding-left: 1.3rem; }
+  li { margin-bottom: 0.35rem; }
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.3rem;
+    margin-bottom: 2rem;
+    font-size: 0.92rem;
+  }
+  .toc h4 {
+    margin: 0 0 0.6rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .toc ol {
+    margin: 0;
+    padding-left: 1.2rem;
+    columns: 2;
+    column-gap: 2rem;
+  }
+  .toc li { margin: 0.18rem 0; break-inside: avoid; }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 0.4rem 0 0.8rem;
+  }
+  .legend .item { display: flex; align-items: center; gap: 0.4rem; }
+  .swatch { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  @media (max-width: 640px) {
+    header.hero h1 { font-size: 1.8rem; }
+    .toc ol { columns: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     HERO — replace title / lede / meta with the document's
+     ========================================================= -->
+<header class="hero">
+  <div class="inner">
+    <div class="eyebrow"><!-- e.g. Spike Report --></div>
+    <h1><!-- Document title --></h1>
+    <p class="lede"><!-- One-sentence what-is-this --></p>
+    <div class="meta">
+      <span><strong>Repo:</strong> <!-- repo --></span>
+      <span><strong>Branch:</strong> <!-- branch --></span>
+      <span><strong>Author:</strong> <!-- name &lt;email&gt; --></span>
+      <span><strong>Date:</strong> <!-- YYYY-MM-DD --></span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- =========================================================
+       TL;DR cards — 2-4 cards summarising the document's beats.
+       Card variants: default (orange), .green, .purple, .amber
+       ========================================================= -->
+  <h2 style="margin-top:0;border:none;padding:0;font-size:1.05rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);font-weight:600">TL;DR — short heading</h2>
+  <div class="tldr">
+    <div class="card">
+      <div class="label">Phase 1</div>
+      <div class="title">Short title</div>
+      <p class="body">One or two sentence summary.</p>
+    </div>
+    <div class="card green">
+      <div class="label">Phase 2</div>
+      <div class="title">Short title</div>
+      <p class="body">One or two sentence summary.</p>
+    </div>
+    <div class="card purple">
+      <div class="label">Phase 3</div>
+      <div class="title">Short title</div>
+      <p class="body">One or two sentence summary.</p>
+    </div>
+    <div class="card amber">
+      <div class="label">Phase 4</div>
+      <div class="title">Short title</div>
+      <p class="body">One or two sentence summary.</p>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       Verdict callout — one-line conclusion.
+       Variants: .callout, .callout.ok, .callout.info, .callout.warn
+       ========================================================= -->
+  <div class="callout ok">
+    <strong>Verdict: short headline.</strong>
+    One or two sentences with the punchline of the report.
+  </div>
+
+  <!-- =========================================================
+       TOC — list each numbered top-level section
+       ========================================================= -->
+  <div class="toc">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#section-1">Section 1 title</a></li>
+      <li><a href="#section-2">Section 2 title</a></li>
+      <li><a href="#section-3">Section 3 title</a></li>
+      <!-- … -->
+    </ol>
+  </div>
+
+  <!-- =========================================================
+       Sections — repeat the pattern below per top-level section.
+       Each h2 carries a numbered <span class="num">N</span> badge.
+       ========================================================= -->
+  <h2 id="section-1"><span class="num">1</span>Section 1 title</h2>
+  <p>Body paragraph.</p>
+
+  <!-- Optional inner heading -->
+  <h3>Subsection</h3>
+  <p>More body.</p>
+
+  <!-- Inline code: <code>foo</code>. Block code: -->
+  <pre><code># shell example
+some-cmd --flag value</code></pre>
+
+  <!-- Comparison table example -->
+  <table class="compare">
+    <thead>
+      <tr>
+        <th style="width:20%">Column A</th>
+        <th style="width:40%">Column B</th>
+        <th style="width:30%">Column C</th>
+        <th style="width:10%">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Row label</td>
+        <td>Value B</td>
+        <td>Value C</td>
+        <td><span class="pill ok">resolved</span></td>
+      </tr>
+      <tr>
+        <td>Another row</td>
+        <td>…</td>
+        <td>…</td>
+        <td><span class="pill warn">verify</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Diagram example -->
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart LR
+    classDef pin fill:#fff7ed,stroke:#fc6d26,color:#1f1f1f,stroke-width:2px
+    classDef ok fill:#f0fdf4,stroke:#16a34a,color:#1f1f1f,stroke-width:2px
+    classDef info fill:#eef2ff,stroke:#6e49cb,color:#1f1f1f,stroke-width:2px
+
+    A["Step A"]:::pin --> B["Step B"]:::info --> C["Step C"]:::ok
+    </pre>
+    <div class="diagram-caption">One-sentence caption explaining the diagram.</div>
+  </div>
+
+  <!-- Callout example -->
+  <div class="callout info">
+    <strong>Note</strong>
+    Body of the callout.
+  </div>
+
+  <h2 id="section-2"><span class="num">2</span>Section 2 title</h2>
+  <p>…</p>
+
+  <!-- =========================================================
+       Footer
+       ========================================================= -->
+  <footer>
+    <!-- e.g. Companion to <a href="…">doc.md</a> · project · branch <code>name</code> -->
+  </footer>
+
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      fontSize: '13px',
+      primaryColor: '#fff',
+      primaryTextColor: '#1f1f1f',
+      lineColor: '#6b7280',
+      arrowheadColor: '#6b7280'
+    },
+    flowchart: { curve: 'basis', padding: 12 }
+  });
+</script>
+
+</body>
+</html>
